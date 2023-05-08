@@ -55,4 +55,9 @@ app.get('*', (request, response) => {
   response.send('The route was not found. Error 404');
 });
 
+app.use((error,request,response, next) => {
+  console.error(error);
+  response.status(500).send(error.message);
+});
+
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
