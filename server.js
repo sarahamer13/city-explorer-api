@@ -1,11 +1,11 @@
 'use strict';
 
-// We bring dotenv
-require('dotenv').config();
 
 // We bring express
 const express = require('express');
 
+// We bring dotenv
+require('dotenv').config();
 // We bring cors
 const cors = require('cors');
 
