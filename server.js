@@ -36,16 +36,11 @@ app.get ('/weatherData',async (request, response, next) => {
   console.log(`Latitude: ${lat}, Longitude: ${lon}`);
   try {
 
-    const API = `http://api.weatherbit.io/v2.0/forecast/daily?key=${process.env.WEATHER_API_KEY}&lang=en&lat=${lat}&lon=${lon}&days=5`;
+    const API = `http://api.weatherbit.io/v2.0/forecast/daily?key=${process.env.WEATHER_API_KEY}&lang=en&lat=${lat}&lon=${lon}&days=5&units=I`;
     const cityData = await axios.get(API);
 
     const formattedData = cityData.data.data.map(dayForecast => {
-      return {
-        date: dayForecast.valid_date,
-        description: dayForecast.weather.description,
-        high_temp: dayForecast.high_temp,
-        low_temp: dayForecast.low_temp
-      };
+      return new Forecast (dayForecast);
     });
 
     response.status(200).send(formattedData);
@@ -53,14 +48,14 @@ app.get ('/weatherData',async (request, response, next) => {
     next(error);
   }
 });
-// class Forecast {
-//   constructor(weatherObjects) {
-//     this.date = weatherObjects.date;
-//     this.description = weatherObjects.day.condition.text;
-//     this.highTemp = weatherObjects.day.max_temp;
-//     this.lowTemp = weatherObjects.day.low_temp;
-//   }
-// }
+class Forecast {
+  constructor(weatherObjects) {
+    this.date = weatherObjects.valid_date;
+    this.description = weatherObjects.weather.description;
+    this.highTemp = weatherObjects.max_temp;
+    this.lowTemp = weatherObjects.low_temp;
+  }
+}
 
 app.use((error,request,response, next) => {
   console.error(error.message);
