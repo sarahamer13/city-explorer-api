@@ -7,7 +7,7 @@
 ## Overview
 
 - In this lab we created a server to host data
-- When the user click explorer, he will be shown a map, the weather forecast related to the city the user searches.
+- When the user click explorer, he will be shown a map, the weather forecast and movies related to the city the user searches
 
 ## Getting Started
 
@@ -42,7 +42,7 @@ Actual time needed to complete: 3.5 hours including troubleshooting and starting
 ## Process
 
 ![Whiteboard process](./CE-API.pngpng)
-![Another Whiteboard](./API-server.png) worked on this with Julio Ramirez
+![Another Whiteboard](./API-server.png) Julio Ramirez sent me the whiteboard
 
 
 
