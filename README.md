@@ -42,4 +42,7 @@ Actual time needed to complete: 3.5 hours including troubleshooting and starting
 ## Process
 
 ![Whiteboard process](./CE-API.pngpng)
+![Another Whiteboard](./API-server.png) worked on this with Julio Ramirez
+
+
 
