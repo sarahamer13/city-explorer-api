@@ -9,12 +9,10 @@ require('dotenv').config();
 // We bring cors
 const cors = require('cors');
 
-// We bring axios
-const axios = require ('axios');
 
-// Bringing our data
-const weatherData = process.env.WEATHER_API_KEY;
-const movieData = process.env.MOVIE_API_KEY;
+const getWeather = require ('./modules/weather');
+const getMovies = require ('./modules/movie');
+
 
 // Initializing express
 const app = express();
@@ -28,75 +26,16 @@ app.get('/', (request, response) => {
   response.status(200).send('Hey your default route is working');
 });
 
-
-
-app.get ('/weatherData',async (request, response, next) => {
-
-  const { lat, lon } = request.query;
-  console.log(`Latitude: ${lat}, Longitude: ${lon}`);
-  try {
-
-    const API = `http://api.weatherbit.io/v2.0/forecast/daily?key=${process.env.WEATHER_API_KEY}&lang=en&lat=${lat}&lon=${lon}&days=5&units=I`;
-    const cityData = await axios.get(API);
-
-    const formattedData = cityData.data.data.map(dayForecast => {
-      return new Forecast (dayForecast);
-    });
-
-    response.status(200).send(formattedData);
-  } catch (error) {
-    next(error);
-  }
-});
-class Forecast {
-  constructor(weatherObjects) {
-    this.date = weatherObjects.valid_date;
-    this.description = weatherObjects.weather.description;
-    this.highTemp = weatherObjects.max_temp;
-    this.lowTemp = weatherObjects.low_temp;
-  }
-}
-
-app.use((error,request,response, next) => {
-  console.error(error.message);
-  response.status(500).send(error.message);
+app.use((err, request, response, next) => {
+  response.status(500).send(err);
+  next();
 });
 
-app.get ('/movies',async (request, response, next) => {
-
-  const {citySearch} = request.query;
-
-  try {
-    const API = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${citySearch}`;
-    const movieData = await axios.get(API);
-
-
-    const formattedData = movieData.data.results.map(movie => new Movies(movie));
-    response.status(200).send(formattedData);
-
-  } catch (error) {
-    next(error);
-  }
-});
-
-class Movies {
-  constructor(obj) {
-    this.title = obj.title;
-    this.overview = obj.overview;
-    this.images_url = obj.poster_path;
-    this.average_votes = obj.vote_average;
-    this.total_votes = obj.vote_count;
-    this.popularity = obj.popularity;
-    this.released_on = obj.release_date;
-  }
-}
-
-app.use((error,request,response, next) => {
-  console.error(error.message);
-  response.status(500).send(error.message);
-});
+app.get('/weather', getWeather);
+app.get('/movies', getMovies);
 
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
+
 
 
 
